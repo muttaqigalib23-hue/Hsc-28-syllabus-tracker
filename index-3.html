@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="HSC 2028 premium syllabus tracker for Bangladesh science students." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>HSC 28 • Syllabus Tracker</title>
+  <style>
+    :root{
+      --bg:#070b16; --panel:#0f1628; --panel2:#111b30; --line:rgba(255,255,255,.09);
+      --text:#f6f8ff; --muted:#9ca9c4; --accent:#8b5cf6; --accent2:#22d3ee;
+      --good:#34d399; --warn:#fbbf24; --danger:#fb7185; --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:
+      radial-gradient(circle at 15% 10%,rgba(139,92,246,.16),transparent 32%),
+      radial-gradient(circle at 90% 15%,rgba(34,211,238,.12),transparent 28%),
+      linear-gradient(180deg,#070b16,#080d19 55%,#060a12);
+      color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      min-height:100vh;
+    }
+    button,input{font:inherit}
+    .app{max-width:1180px;margin:0 auto;padding:24px 16px 56px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;position:sticky;top:0;z-index:20;padding:8px 0 16px;background:linear-gradient(180deg,rgba(7,11,22,.96),rgba(7,11,22,.70),transparent);backdrop-filter:blur(10px)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:900;box-shadow:0 12px 30px rgba(139,92,246,.28)}
+    .brand h1{font-size:17px;margin:0;letter-spacing:.2px}.brand small{display:block;color:var(--muted);margin-top:2px;font-size:11px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;transition:.2s;}
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.09)}
+    .btn.primary{border-color:transparent;background:linear-gradient(135deg,var(--accent),#6d5dfc)}
+    .btn.danger{background:rgba(251,113,133,.09);color:#fecdd3;border-color:rgba(251,113,133,.2)}
+    .hero{display:grid;grid-template-columns:1.45fr .55fr;gap:16px;margin-top:10px}
+    .card{background:linear-gradient(180deg,rgba(17,27,48,.9),rgba(11,18,33,.9));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-copy{padding:26px}
+    .eyebrow{font-size:12px;color:#c4b5fd;font-weight:800;letter-spacing:.15em;text-transform:uppercase}
+    .hero h2{font-size:clamp(28px,5vw,48px);line-height:1.02;margin:10px 0 12px;letter-spacing:-1.5px}
+    .hero p{margin:0;color:var(--muted);max-width:720px;line-height:1.6}
+    .notice{margin-top:16px;padding:12px 14px;border:1px solid rgba(251,191,36,.2);background:rgba(251,191,36,.06);border-radius:14px;color:#fde68a;font-size:12px;line-height:1.5}
+    .hero-stat{display:grid;place-items:center;padding:22px;min-height:250px}
+    .ring{width:172px;height:172px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--accent) calc(var(--p)*1%), rgba(255,255,255,.08) 0)}
+    .ring::before{content:"";position:absolute;inset:11px;border-radius:50%;background:#0b1324;border:1px solid var(--line)}
+    .ring-content{position:relative;text-align:center}.ring-value{font-size:38px;font-weight:900}.ring-label{color:var(--muted);font-size:11px;margin-top:2px}
+    .toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:18px 0 12px;flex-wrap:wrap}
+    .filters{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:rgba(255,255,255,.04);color:#cbd5e1;padding:8px 12px;border-radius:999px;cursor:pointer;font-size:12px}.chip.active{background:rgba(139,92,246,.18);border-color:rgba(139,92,246,.45);color:#ddd6fe}
+    .search{min-width:min(360px,100%);flex:1;max-width:420px}.search input{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);outline:none}.search input:focus{border-color:rgba(139,92,246,.55);box-shadow:0 0 0 3px rgba(139,92,246,.09)}
+    .subjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .subject{overflow:hidden}.subject-head{padding:18px 18px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}.subject-title{min-width:0}.subject-title h3{margin:0;font-size:16px}.subject-title span{font-size:11px;color:var(--muted)}
+    .subject-percent{font-weight:800;font-size:14px;color:#ddd6fe}.progress{height:7px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;margin:0 18px 12px}.progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:inherit;transition:.35s}
+    details{border-top:1px solid var(--line)}.paper-summary{padding:13px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;list-style:none}.paper-summary::-webkit-details-marker{display:none}.paper-name{font-size:12px;font-weight:800}.paper-count{font-size:11px;color:var(--muted)}
+    .items{padding:0 12px 12px}.item{display:flex;align-items:flex-start;gap:11px;padding:10px 8px;border-radius:12px}.item:hover{background:rgba(255,255,255,.035)}
+    .item input{appearance:none;width:22px;height:22px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(255,255,255,.03);cursor:pointer;flex:none;margin-top:1px;position:relative}.item input:checked{background:linear-gradient(135deg,var(--good),#10b981);border-color:transparent}.item input:checked::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:#052e21;font-weight:1000;font-size:14px}
+    .item-main{min-width:0}.item-title{font-size:13px;line-height:1.4}.item-meta{font-size:10px;color:var(--muted);margin-top:2px}.item.done .item-title{text-decoration:line-through;color:#8f9bb0}.item.done .item-meta{opacity:.8}
+    .subject-foot{padding:12px 18px 16px;display:flex;justify-content:space-between;color:var(--muted);font-size:10px}
+    .empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted)}
+    footer{margin-top:28px;color:#6f7b93;font-size:10px;line-height:1.6;text-align:center}
+    @media(max-width:850px){.hero{grid-template-columns:1fr}.subjects{grid-template-columns:1fr}.hero-stat{min-height:205px}.topbar{align-items:flex-start}.actions .btn{padding:9px 10px}}
+    @media(max-width:520px){.app{padding:16px 10px 40px}.brand h1{font-size:15px}.logo{width:40px;height:40px;border-radius:13px}.topbar{position:static}.hero-copy{padding:20px}.hero h2{font-size:33px}.search{min-width:100%}.toolbar{align-items:stretch}.filters{width:100%;overflow:auto;padding-bottom:2px;flex-wrap:nowrap}.chip{white-space:nowrap}.subject-head{padding:16px 14px 12px}.progress{margin:0 14px 12px}.paper-summary{padding:12px 14px}.items{padding:0 8px 10px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">28</div><div><h1>HSC 28 • Syllabus Tracker</h1><small>Track → tick → watch your progress rise.</small></div></div>
+    <div class="actions"><button class="btn" id="exportBtn">Export</button><label class="btn" for="importInput">Import</label><input id="importInput" type="file" accept="application/json" hidden><button class="btn danger" id="resetBtn">Reset</button></div>
+  </header>
+
+  <section class="hero">
+    <div class="card hero-copy">
+      <div class="eyebrow">HSC 2028 • Science</div>
+      <h2>Your syllabus.<br><span style="background:linear-gradient(90deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent">One dashboard.</span></h2>
+      <p>Tick a chapter, lesson, grammar area, or writing skill when you finish it. Progress is saved automatically in this browser.</p>
+      <div class="notice">📌 Syllabus basis: current HSC/NCTB textbook & curriculum structure. A separate final HSC 2028 exam-specific syllabus notice was not clearly available yet in the public NCTB material checked for this tracker, so the data below is designed to be updateable.</div>
+    </div>
+    <div class="card hero-stat"><div class="ring" id="overallRing" style="--p:0"><div class="ring-content"><div class="ring-value" id="overallPct">0%</div><div class="ring-label">overall complete</div></div></div></div>
+  </section>
+
+  <div class="toolbar">
+    <div class="filters"><button class="chip active" data-filter="all">All</button><button class="chip" data-filter="science">Science</button><button class="chip" data-filter="languages">Bangla + English</button><button class="chip" data-filter="other">ICT</button></div>
+    <div class="search"><input id="searchInput" placeholder="Search chapter / unit…" autocomplete="off"></div>
+  </div>
+
+  <main class="subjects" id="subjects"></main>
+  <footer>Local-first tracker • your checkmarks stay on your device • Export a backup before changing devices.</footer>
+</div>
+
+<script>
+const DATA = [
+  {id:'phy1',group:'science',name:'Physics 1st Paper',bn:'পদার্থবিজ্ঞান ১ম পত্র',items:[
+    '1. ভৌতজগৎ ও পরিমাপ','2. ভেক্টর','3. গতিবিদ্যা','4. নিউটনিয়ান বলবিদ্যা','5. কাজ, শক্তি ও ক্ষমতা','6. মহাকর্ষ ও অভিকর্ষ','7. পদার্থের গাঠনিক ধর্ম','8. পর্যাবৃত্ত গতি','9. তরঙ্গ','10. আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব']},
+  {id:'phy2',group:'science',name:'Physics 2nd Paper',bn:'পদার্থবিজ্ঞান ২য় পত্র',items:[
+    '1. তাপগতিবিদ্যা','2. স্থির তড়িৎ','3. চল তড়িৎ','4. তড়িৎ প্রবাহের চৌম্বক ক্রিয়া ও চুম্বকত্ব','5. তাড়িতচৌম্বকীয় আবেশ ও পরিবর্তী প্রবাহ','6. জ্যামিতিক আলোকবিজ্ঞান','7. ভৌত আলোকবিজ্ঞান','8. আধুনিক পদার্থবিজ্ঞানের সূচনা','9. পরমাণুর মডেল এবং নিউক্লিয়ার পদার্থবিজ্ঞান','10. সেমিকন্ডাক্টর ও ইলেকট্রনিক্স','11. জ্যোতির্বিজ্ঞান']},
+  {id:'chem1',group:'science',name:'Chemistry 1st Paper',bn:'রসায়ন ১ম পত্র',items:[
+    '1. ল্যাবরেটরির নিরাপদ ব্যবহার','2. গুণগত রসায়ন','3. মৌলের পর্যায়বৃত্ত ধর্ম ও রাসায়নিক বন্ধন','4. রাসায়নিক পরিবর্তন','5. কর্মমুখী রসায়ন']},
+  {id:'chem2',group:'science',name:'Chemistry 2nd Paper',bn:'রসায়ন ২য় পত্র',items:[
+    '1. পরিবেশ রসায়ন','2. জৈব রসায়ন','3. পরিমাণগত রসায়ন','4. তড়িৎ রসায়ন','5. অর্থনৈতিক রসায়ন']},
+  {id:'hm1',group:'science',name:'Higher Math 1st Paper',bn:'উচ্চতর গণিত ১ম পত্র',items:[
+    '1. ম্যাট্রিক্স ও নির্ণায়ক','2. ভেক্টর','3. সরলরেখা','4. বৃত্ত','5. বিন্যাস ও সমাবেশ','6. ত্রিকোণমিতিক অনুপাত','7. সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত','8. ফাংশন ও ফাংশনের লেখচিত্র','9. অন্তরীকরণ','10. যোগজীকরণ']},
+  {id:'hm2',group:'science',name:'Higher Math 2nd Paper',bn:'উচ্চতর গণিত ২য় পত্র',items:[
+    '1. বাস্তব সংখ্যা ও অসমতা','2. যোগাশ্রয়ী প্রোগ্রাম','3. জটিল সংখ্যা','4. বহুপদী ও বহুপদী সমীকরণ','5. দ্বিপদী বিস্তৃতি','6. কণিক','7. ত্রিকোণমিতিক ফাংশন','8. স্থিতিবিদ্যা','9. সমতলে বস্তুকণার গতি','10. বিস্তার পরিমাপ ও সম্ভাবনা']},
+  {id:'botany',group:'science',name:'Botany • Biology 1st Paper',bn:'উদ্ভিদবিজ্ঞান • জীববিজ্ঞান ১ম পত্র',items:[
+    '1. কোষ ও এর গঠন','2. কোষ বিভাজন','3. কোষ রসায়ন','4. অণুজীব','5. শৈবাল ও ছত্রাক','6. ব্রায়োফাইটা ও টেরিডোফাইটা','7. নগ্নবীজী ও আবৃতবীজী','8. টিস্যু ও টিস্যুতন্ত্র','9. উদ্ভিদ শারীরতত্ত্ব','10. উদ্ভিদ প্রজনন','11. জীবপ্রযুক্তি','12. জীবের পরিবেশ, বিস্তরণ ও সংরক্ষণ']},
+  {id:'zoology',group:'science',name:'Zoology • Biology 2nd Paper',bn:'প্রাণীবিজ্ঞান • জীববিজ্ঞান ২য় পত্র',items:[
+    '1. প্রাণীর বিভিন্নতা ও শ্রেণিবিন্যাস','2. প্রাণীর পরিচিতি','3. মানব শারীরতত্ত্ব: পরিপাক ও শোষণ','4. মানব শারীরতত্ত্ব: রক্ত ও সংবহন','5. মানব শারীরতত্ত্ব: শ্বসন ও শ্বাসক্রিয়া','6. মানব শারীরতত্ত্ব: বর্জ্য ও নিষ্কাশন','7. মানব শারীরতত্ত্ব: চলন ও অঙ্গচালনা','8. মানব শারীরতত্ত্ব: সমন্বয় ও নিয়ন্ত্রণ','9. মানব জীবনের ধারাবাহিকতা','10. মানবদেহের প্রতিরক্ষা','11. জিনতত্ত্ব ও বিবর্তন','12. প্রাণীর আচরণ']},
+  {id:'bangla1',group:'languages',name:'Bangla 1st Paper',bn:'বাংলা ১ম পত্র',items:[
+    'গদ্য 01 • বাঙ্গালার নব্য লেখকদিগের প্রতি নিবেদন','গদ্য 02 • অপরিচিতা','গদ্য 03 • সাহিত্যে খেলা','গদ্য 04 • বিলাসী','গদ্য 05 • অর্ধাঙ্গী','গদ্য 06 • যৌবনের গান','গদ্য 07 • জীবন ও বৃক্ষ','গদ্য 08 • গন্তব্য কাবুল','গদ্য 09 • মাসি-পিসি','গদ্য 10 • কপিলদাস মুর্মুর শেষ কাজ','গদ্য 11 • রেইনকোট','গদ্য 12 • নেকলেস',
+    'পদ্য 01 • ঋতু-বর্ণন','পদ্য 02 • বিভীষণের প্রতি মেঘনাদ','পদ্য 03 • সোনার তরী','পদ্য 04 • বিদ্রোহী','পদ্য 05 • সুচেতনা','পদ্য 06 • প্রতিদান','পদ্য 07 • তাহারেই পড়ে মনে','পদ্য 08 • পদ্মা','পদ্য 09 • ফেব্রুয়ারি ১৯৬৯','পদ্য 10 • আঠার বছর বয়স','পদ্য 11 • আমি কিংবদন্তির কথা বলছি','পদ্য 12 • প্রত্যাবর্তনের লজ্জা',
+    'সহপাঠ • লালসালু','সহপাঠ • সিরাজউদ্দৌলা']},
+  {id:'bangla2',group:'languages',name:'Bangla 2nd Paper',bn:'বাংলা ২য় পত্র',items:[
+    'ব্যাকরণ • বাংলা ভাষা ও ব্যাকরণের ভিত্তি','ব্যাকরণ • উচ্চারণ ও বানান','ব্যাকরণ • শব্দশ্রেণি','ব্যাকরণ • শব্দগঠন: উপসর্গ ও প্রত্যয়','ব্যাকরণ • সন্ধি','ব্যাকরণ • সমাস','ব্যাকরণ • কারক ও বিভক্তি','ব্যাকরণ • ধাতু ও ক্রিয়া','ব্যাকরণ • কাল, ভাব ও বাচ্য','ব্যাকরণ • বাক্য ও বাক্যরীতি','ব্যাকরণ • শুদ্ধ প্রয়োগ ও শুদ্ধকরণ','ব্যাকরণ • বিরামচিহ্ন','ব্যাকরণ • বাগধারা ও প্রবাদ-প্রবচন','নির্মিতি • সারাংশ/সারমর্ম','নির্মিতি • ভাবসম্প্রসারণ','নির্মিতি • প্রতিবেদন','নির্মিতি • পত্র/আবেদনপত্র','নির্মিতি • প্রবন্ধ রচনা']},
+  {id:'eng1',group:'languages',name:'English 1st Paper',bn:'English for Today',items:[
+    'Unit 1 • Education and Life','Unit 2 • Art and Craft','Unit 3 • Myths and Literature','Unit 4 • History','Unit 5 • Human Rights','Unit 6 • Dreams','Unit 7 • Youthful Achievers','Unit 8 • Relationships','Unit 9 • Adolescence','Unit 10 • Lifestyle','Unit 11 • Peace and Conflict','Unit 12 • Environment and Nature']},
+  {id:'eng2',group:'languages',name:'English 2nd Paper',bn:'Grammar + Writing',items:[
+    'Grammar • Parts of Speech & Word Classes','Grammar • Articles & Determiners','Grammar • Tenses','Grammar • Subject–Verb Agreement','Grammar • Right Form of Verbs','Grammar • Modals','Grammar • Voice Change','Grammar • Narration / Direct–Indirect Speech','Grammar • Transformation of Sentences','Grammar • Completing Sentences','Grammar • Connectors / Linkers','Grammar • Punctuation & Capitalization','Writing • Paragraph','Writing • E-mail / Informal Letter','Writing • Graph / Chart','Writing • Report','Writing • Story / Creative Composition']},
+  {id:'ict',group:'other',name:'ICT',bn:'তথ্য ও যোগাযোগ প্রযুক্তি',items:[
+    '1. তথ্য ও যোগাযোগ প্রযুক্তি: বিশ্ব ও বাংলাদেশ প্রেক্ষিত','2. কমিউনিকেশন সিস্টেমস ও নেটওয়ার্কিং','3. সংখ্যা পদ্ধতি ও ডিজিটাল ডিভাইস','4. ওয়েব ডিজাইন পরিচিতি এবং HTML','5. প্রোগ্রামিং ভাষা','6. ডেটাবেজ ম্যানেজমেন্ট সিস্টেম']}
+];
+
+const KEY='hsc28-tracker-v1';
+let state=JSON.parse(localStorage.getItem(KEY)||'{}');
+let activeFilter='all', search='';
+
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function isDone(id,idx){return !!state[id+':'+idx]}
+function setDone(id,idx,val){state[id+':'+idx]=val;save();render()}
+function subjectStats(s){let total=s.items.length,done=s.items.reduce((a,_,i)=>a+(isDone(s.id,i)?1:0),0);return {total,done,pct:total?Math.round(done/total*100):0}}
+function overall(){let t=0,d=0;DATA.forEach(s=>{const st=subjectStats(s);t+=st.total;d+=st.done});return {t,d,pct:t?Math.round(d/t*100):0}}
+
+function render(){
+  const root=document.getElementById('subjects');
+  const list=DATA.filter(s=>activeFilter==='all'||s.group===activeFilter).filter(s=>{
+    if(!search)return true;
+    const q=search.toLowerCase();return (s.name+' '+s.bn+' '+s.items.join(' ')).toLowerCase().includes(q)
+  });
+  if(!list.length){root.innerHTML='<div class="card empty">No matching syllabus items.</div>'}else{
+    root.innerHTML=list.map(s=>{
+      const st=subjectStats(s);
+      return `<section class="card subject" data-subject="${s.id}">
+        <div class="subject-head"><div class="subject-title"><h3>${s.name}</h3><span>${s.bn}</span></div><div class="subject-percent">${st.pct}%</div></div>
+        <div class="progress"><i style="width:${st.pct}%"></i></div>
+        <details open><summary class="paper-summary"><span class="paper-name">Checklist</span><span class="paper-count">${st.done}/${st.total} done</span></summary>
+          <div class="items">${s.items.map((x,i)=>{const done=isDone(s.id,i);return `<label class="item ${done?'done':''}"><input type="checkbox" ${done?'checked':''} data-id="${s.id}" data-i="${i}"><span class="item-main"><div class="item-title">${x}</div><div class="item-meta">${done?'Completed':'Not completed'}</div></span></label>`}).join('')}</div>
+        </details>
+        <div class="subject-foot"><span>${st.done} completed</span><span>${st.total-st.done} remaining</span></div>
+      </section>`
+    }).join('');
+  }
+  root.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.addEventListener('change',e=>setDone(e.target.dataset.id,Number(e.target.dataset.i),e.target.checked)));
+  const o=overall();document.getElementById('overallPct').textContent=o.pct+'%';document.getElementById('overallRing').style.setProperty('--p',o.pct);
+}
+
+document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeFilter=b.dataset.filter;render()}));
+document.getElementById('searchInput').addEventListener('input',e=>{search=e.target.value.trim();render()});
+
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(confirm('Reset all HSC 28 progress? This cannot be undone unless you exported a backup.')){state={};save();render()}
+});
+
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),progress:state},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hsc28-progress-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)
+});
+
+document.getElementById('importInput').addEventListener('change',e=>{
+  const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);state=x.progress||x;save();render();alert('Progress imported successfully.')}catch(err){alert('Invalid backup file.')}};r.readAsText(file);e.target.value='';
+});
+
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+render();
+</script>
+</body>
+</html>
